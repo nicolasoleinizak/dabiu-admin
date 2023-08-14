@@ -10,13 +10,15 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('woocommerce_credentials', function (Blueprint $table) {
             $table->id();
-            $table->string('company');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->string('url');
+            $table->string('username');
             $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('woocommerce_credentials');
     }
 };
