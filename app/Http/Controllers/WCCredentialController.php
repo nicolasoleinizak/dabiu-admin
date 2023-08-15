@@ -33,4 +33,27 @@ class WCCredentialController extends Controller
 
         return response()->json(['message' => 'Credential created']);
     }
+
+    public function check(Request $request)
+    {
+        $user_id = auth()->user()->id;
+
+        $credential = WCCredential::where([
+            'user_id' => $user_id,
+        ])->first();
+
+        if($credential){
+            return response()->json([
+                'credential' => [
+                    'exists' => true,
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'credential' => [
+                'exists' => false,
+            ]
+        ]);
+    }
 }

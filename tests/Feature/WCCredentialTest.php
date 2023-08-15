@@ -61,6 +61,42 @@ class WCCredentialTest extends TestCase
         );
     }
 
+    public function test_credential_check(): void
+    {
+        $token = $this->getToken();
+
+        $body = [
+          'url' => 'https://testurl.com',
+          'username' => 'username',
+          'password' => 'password',
+        ];
+
+        
+        $credential_check_response = $this->checkCredential($token);
+        
+        $credential_check_response->assertStatus(200);
+
+        $credential_check_response->assertJsonIsObject();
+        
+        $credential_check_response->assertJson(fn (AssertableJson $json) => 
+            $json
+            ->where('credential', ['exists' => false])
+        );
+
+        $credential_creation_response = $this->createCredential($body, $token);
+
+        $credential_check_response = $this->checkCredential($token);
+        
+        $credential_check_response->assertStatus(200);
+
+        $credential_check_response->assertJsonIsObject();
+
+        $credential_check_response->assertJson(fn (AssertableJson $json) => 
+            $json
+            ->where('credential', ['exists' => true])
+        );
+    }
+
     private function getToken() {
         $email = 'test@test.com';
         $password = 'password123';
@@ -102,6 +138,19 @@ class WCCredentialTest extends TestCase
                     'username' => $body['username'],
                     'password' => $body['password'],
                 ]
+                );
+        return $response;
+    }
+
+    private function checkCredential($token) {
+        $response = $this
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '.$token,
+                ])
+            ->getJson(
+                '/api/credentials/wc/check'
                 );
         return $response;
     }
