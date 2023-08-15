@@ -30,7 +30,7 @@ import { registerService } from '../services/authService';
         this.attemptFailed = false;
         try {
           await registerService({
-            company: this.name,
+            company: this.company,
             email: this.email,
             password: this.password,
             confirmation_password: this.confirmation_password,

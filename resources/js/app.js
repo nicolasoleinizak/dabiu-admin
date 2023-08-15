@@ -31,6 +31,7 @@ const vuetify = createVuetify({
           primary: '#998aa5',
           secondary: colors.blue.darken2,
           neuter: '#A4A68B',
+          alert: colors.yellow.base,
         }
       }
     },

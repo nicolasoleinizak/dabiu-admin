@@ -5,7 +5,12 @@ export const createCredentialsService = async (body) => {
   return response.data;
 };
 
-export const checkCredentialService = async () => {
+export const checkCredentialsService = async () => {
   const response = await http.get('/credentials/wc/check');
+  return response.data;
+}
+
+export const deleteCredentialsService = async () => {
+  const response = await http.delete('/credentials/wc');
   return response.data;
 }

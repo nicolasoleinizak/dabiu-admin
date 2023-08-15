@@ -42,18 +42,34 @@ class WCCredentialController extends Controller
             'user_id' => $user_id,
         ])->first();
 
+        return response()->json(['credentials' => $credential]);
+
         if($credential){
             return response()->json([
-                'credential' => [
+                'credentials' => [
                     'exists' => true,
                 ]
             ]);
         }
 
         return response()->json([
-            'credential' => [
+            'credentials' => [
                 'exists' => false,
             ]
         ]);
+    }
+
+    public function delete(Request $request)
+    {
+        $user_id = auth()->user()->id;
+
+        $credential = WCCredential::where([
+            'user_id' => $user_id,
+        ])->first();
+
+        if($credential->delete()){
+            return response()->json(['message' => 'ok']);
+        }
+        return response()->json(['message', 'error']);
     }
 }
