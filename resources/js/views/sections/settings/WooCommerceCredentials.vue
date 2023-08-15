@@ -1,5 +1,6 @@
 <template>
   <h2>Credenciales de Woocommerce</h2>
+  <div><p>{{ credentialsState }}</p></div>
   <v-form>
     <v-text-field
       placeholder="URL del sitio"
@@ -18,6 +19,6 @@
 
 <script>
 export default {
-  name: 'WooCommerceCredentials'
+  
 }
 </script>
