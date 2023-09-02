@@ -11,11 +11,4 @@ class WCCredential extends Model
     use HasFactory;
 
     protected $table = 'woocommerce_credentials';
-
-    protected function password(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => str_repeat("\u{2022}", strlen($value))
-        );
-    }
 }
