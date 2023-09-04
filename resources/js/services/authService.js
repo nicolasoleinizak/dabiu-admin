@@ -1,4 +1,4 @@
-import http from "./http";
+import { unauthenticatedHttp as http } from "./http";
 
 export const loginService = async (authData) => {
   try {
