@@ -15,9 +15,17 @@
 </script>
 
 <template>
-  <v-app>
-    <v-main class="pa-0">
+  <v-app id="app">
+    <v-main class="pa-0 bg-primary-lighten-3">
       <router-view v-on:logout="handleLogout"></router-view>
     </v-main>
   </v-app>
 </template>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap');
+#app, .v-overlay-container{
+  font-family: "Hind Siliguri", sans-serif !important;
+  font-size: 17px !important;
+}
+</style>

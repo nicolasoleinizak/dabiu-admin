@@ -36,9 +36,9 @@ const vuetify = createVuetify({
       }
     },
     variations: {
-      colors: ['primary', 'secondary'],
-      lighten: 2,
-      darken: 2,
+      colors: ['primary', 'secondary', 'neuter'],
+      lighten: 4,
+      darken: 4,
     }
   },
   components,
@@ -57,6 +57,7 @@ const routes = [
   {
     path: '/',
     component: Home,
+    redirect: { name: 'catalog'},
     children: [
       {
         path: '/catalog',
