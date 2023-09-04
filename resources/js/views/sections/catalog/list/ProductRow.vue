@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import VariationsList from './VariationsList.vue';
 import CatalogRow from './CatalogRow.vue';
 import ProductThumbnail from '../../../../components/ProductThumbnail.vue';
 import { getCurrency } from '../../../../helpers/getCurrency';
@@ -44,7 +43,7 @@ export default{
         },
         getCurrency
     },
-    components: { VariationsList, CatalogRow, ProductThumbnail },
+    components: { CatalogRow, ProductThumbnail },
     emits: ['clickOnEdit']
 }
 </script>
