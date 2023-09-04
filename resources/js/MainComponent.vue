@@ -1,17 +1,17 @@
 <script>
-  export default {
-    methods: {
-      handleLogout: function() {
-        localStorage.removeItem('token');
-        this.$router.push('/login');
-      }
+export default {
+  methods: {
+    handleLogout() {
+      localStorage.removeItem('token');
+      this.$router.push('/login');
     },
-    mounted() {
-      if(!localStorage.token){
-        this.$router.push('/login');
-      }
+  },
+  mounted() {
+    if (!localStorage.token) {
+      this.$router.push('/login');
     }
-  }
+  },
+};
 </script>
 
 <template>
@@ -24,7 +24,9 @@
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap');
-#app, .v-overlay-container{
+
+#app,
+.v-overlay-container {
   font-family: "Hind Siliguri", sans-serif !important;
   font-size: 17px !important;
 }

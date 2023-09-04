@@ -22,12 +22,13 @@ class WCCredentialTest extends TestCase
         ];
 
         $credential_creation_response = $this->createCredential($body, $token);
-        
+
         $credential_creation_response->assertStatus(200);
 
         $credential_creation_response->assertJsonIsObject();
 
-        $credential_creation_response->assertJson(fn (AssertableJson $json) => 
+        $credential_creation_response->assertJson(
+            fn (AssertableJson $json) =>
         $json
             ->has('message')
             ->where('message', 'Credential created')
@@ -47,14 +48,15 @@ class WCCredentialTest extends TestCase
         $credential_creation_response = $this->createCredential($body, $token);
 
         $body['password'] = 'new password';
-  
+
         $credential_update_response = $this->createCredential($body, $token);
-        
+
         $credential_update_response->assertStatus(200);
 
         $credential_update_response->assertJsonIsObject();
 
-        $credential_update_response->assertJson(fn (AssertableJson $json) =>
+        $credential_update_response->assertJson(
+            fn (AssertableJson $json) =>
         $json
             ->has('message')
             ->where('message', 'Credential updated')
@@ -71,14 +73,15 @@ class WCCredentialTest extends TestCase
           'password' => 'password',
         ];
 
-        
+
         $credential_check_response = $this->checkCredential($token);
-        
+
         $credential_check_response->assertStatus(200);
 
         $credential_check_response->assertJsonIsObject();
-        
-        $credential_check_response->assertJson(fn (AssertableJson $json) => 
+
+        $credential_check_response->assertJson(
+            fn (AssertableJson $json) =>
             $json
             ->where('credential', ['exists' => false])
         );
@@ -86,27 +89,29 @@ class WCCredentialTest extends TestCase
         $credential_creation_response = $this->createCredential($body, $token);
 
         $credential_check_response = $this->checkCredential($token);
-        
+
         $credential_check_response->assertStatus(200);
 
         $credential_check_response->assertJsonIsObject();
 
-        $credential_check_response->assertJson(fn (AssertableJson $json) => 
+        $credential_check_response->assertJson(
+            fn (AssertableJson $json) =>
             $json
             ->where('credential', ['exists' => true])
         );
     }
 
-    private function getToken() {
+    private function getToken()
+    {
         $email = 'test@test.com';
         $password = 'password123';
-        
+
         $this->user = User::create([
             'company' => 'Test company',
             'password' => $password,
             'email' => $email,
         ]);
-        
+
         $response = $this
         ->withHeaders([
             'Content-Type' => 'application/json',
@@ -118,13 +123,14 @@ class WCCredentialTest extends TestCase
                             'email' => $email,
                             'password' => $password,
                             ]
-                        );
-                        
+                    );
+
         $token = $response->baseResponse->original['authorization']['token'];
         return $token;
     }
-                
-    private function createCredential($body, $token) {
+
+    private function createCredential($body, $token)
+    {
         $response = $this
             ->withHeaders([
                 'Content-Type' => 'application/json',
@@ -138,11 +144,12 @@ class WCCredentialTest extends TestCase
                     'username' => $body['username'],
                     'password' => $body['password'],
                 ]
-                );
+            );
         return $response;
     }
 
-    private function checkCredential($token) {
+    private function checkCredential($token)
+    {
         $response = $this
             ->withHeaders([
                 'Content-Type' => 'application/json',
@@ -151,8 +158,7 @@ class WCCredentialTest extends TestCase
                 ])
             ->getJson(
                 '/api/credentials/wc/check'
-                );
+            );
         return $response;
     }
 }
-            

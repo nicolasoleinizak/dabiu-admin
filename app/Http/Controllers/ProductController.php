@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\WCCredential;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Pool;
 
@@ -31,8 +30,8 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $this->updateExternalBaseProduct($request->product);
-        
-        if(isset($request->product['variations']) && count($request->modified_variations) > 0){
+
+        if(isset($request->product['variations']) && count($request->modified_variations) > 0) {
             $this->updateExternalVariations($request->product, $request->modified_variations);
         }
 
@@ -65,18 +64,16 @@ class ProductController extends Controller
 
     private function updateExternalVariations($product, $modified_variations)
     {
-        $variations = array_filter($product['variations'], function($variation) 
-            use ($modified_variations)
-            {
+        $variations = array_filter(
+            $product['variations'],
+            function ($variation) use ($modified_variations) {
                 return in_array($variation['id'], $modified_variations);
             }
         );
 
         $credentials = auth()->user()->getWCCredentials()["wc_credentials"];
 
-        $results = Http::pool(function(Pool $pool) 
-        use ($product, $variations, $credentials)
-        {
+        $results = Http::pool(function (Pool $pool) use ($product, $variations, $credentials) {
             foreach ($variations as $variation) {
                 $mapped_variation = [
                     'sale_price' => $variation['sale_price'],
@@ -94,7 +91,8 @@ class ProductController extends Controller
         });
     }
 
-    private function getProducts($params) {
+    private function getProducts($params)
+    {
         $credentials = auth()->user()->getWCCredentials()["wc_credentials"];
         $response = Http::withBasicAuth($credentials["username"], $credentials["password"])
             ->get($credentials["url"].'/wp-json/wc/v3/products', $params);
@@ -123,8 +121,7 @@ class ProductController extends Controller
     private function buildProducts($external_products)
     {
         return array_map(
-            function($item)
-            {
+            function ($item) {
                 return $this->buildProduct($item);
             },
             $external_products
@@ -135,10 +132,10 @@ class ProductController extends Controller
     {
         $product = $this->buildBaseProduct($external_product);
 
-        if($external_product['variations']){
+        if($external_product['variations']) {
             $external_variations = $this->getVariations($external_product['id']);
             $variations = array_map(
-                fn ($variation) => $this->buildVariation($variation), 
+                fn ($variation) => $this->buildVariation($variation),
                 $external_variations
             );
             $product['variations'] = $variations;
@@ -164,9 +161,10 @@ class ProductController extends Controller
     }
 
 
-    private function getVariations($product_id) {
+    private function getVariations($product_id)
+    {
         $credentials = auth()->user()->getWCCredentials()["wc_credentials"];
-        
+
         $variants = Http::withBasicAuth($credentials["username"], $credentials["password"])
         ->get($credentials["url"].'/wp-json/wc/v3/products/'.$product_id.'/variations')
         ->json();

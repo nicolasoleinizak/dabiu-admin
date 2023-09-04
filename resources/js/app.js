@@ -1,19 +1,18 @@
-//import './bootstrap';
 import * as VueRouter from 'vue-router';
 import { createApp } from 'vue';
-import Main from './Main.vue';
-import Login from './views/Login.vue';
-import Register from './views/Register.vue';
-import Home from './views/Home.vue';
-import Catalog from './views/sections/Catalog.vue';
-import Settings from './views/sections/Settings.vue';
-import colors from 'vuetify/lib/util/colors'
-import 'vuetify/styles';
-import '@mdi/font/css/materialdesignicons.css'
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import 'vuetify/styles';
+import colors from 'vuetify/lib/util/colors';
+import '@mdi/font/css/materialdesignicons.css';
+import MainComponent from './MainComponent.vue';
+import LoginForm from './views/LoginForm.vue';
+import RegisterForm from './views/RegisterForm.vue';
+import HomeView from './views/HomeView.vue';
+import Catalog from './views/sections/Catalog.vue';
+import Settings from './views/sections/Settings.vue';
 
 const vuetify = createVuetify({
   icons: {
@@ -32,54 +31,54 @@ const vuetify = createVuetify({
           secondary: colors.blue.darken2,
           neuter: '#A4A68B',
           alert: colors.yellow.base,
-        }
-      }
+        },
+      },
     },
     variations: {
       colors: ['primary', 'secondary', 'neuter'],
       lighten: 4,
       darken: 4,
-    }
+    },
   },
   components,
   directives,
-})
+});
 
 const routes = [
   {
     path: '/login',
-    component: Login
+    component: LoginForm,
   },
   {
     path: '/register',
-    component: Register
+    component: RegisterForm,
   },
   {
     path: '/',
-    component: Home,
-    redirect: { name: 'catalog'},
+    component: HomeView,
+    redirect: { name: 'catalog' },
     children: [
       {
         path: '/catalog',
         name: 'catalog',
-        component: Catalog
+        component: Catalog,
       },
       {
         path: '/settings',
         name: 'settings',
-        component: Settings
-      }
-    ]
-  }
+        component: Settings,
+      },
+    ],
+  },
 ];
 
 const router = VueRouter.createRouter({
   history: VueRouter.createWebHashHistory(),
   routes,
-})
+});
 
 const app = createApp({});
 
-app.component('dabiu-app', Main);
+app.component('dabiu-app', MainComponent);
 
-app.use(vuetify).use(router).mount("#app");
+app.use(vuetify).use(router).mount('#app');

@@ -44,7 +44,7 @@ class WCCredentialController extends Controller
 
         return response()->json(['credentials' => $credential]);
 
-        if($credential){
+        if($credential) {
             return response()->json([
                 'credentials' => [
                     'exists' => true,
@@ -67,7 +67,7 @@ class WCCredentialController extends Controller
             'user_id' => $user_id,
         ])->first();
 
-        if($credential->delete()){
+        if($credential->delete()) {
             return response()->json(['message' => 'ok']);
         }
         return response()->json(['message', 'error']);

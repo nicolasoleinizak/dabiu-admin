@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { NotLoggedException } from './httpErrors';
 const { VITE_API_BASE_URL: apiBaseUrl } = import.meta.env;
 
 const commonHttpConfig = {
