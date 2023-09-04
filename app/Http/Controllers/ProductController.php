@@ -32,7 +32,7 @@ class ProductController extends Controller
     {
         $this->updateExternalBaseProduct($request->product);
         
-        if(isset($request->product['variations'])){
+        if(isset($request->product['variations']) && count($request->modified_variations) > 0){
             $this->updateExternalVariations($request->product, $request->modified_variations);
         }
 
@@ -48,10 +48,12 @@ class ProductController extends Controller
             'name' => $data["name"],
             'sale_price' => $data["sale_price"],
             'regular_price' => $data['regular_price'],
+            'manage_stock' => $data['manage_stock'],
             'catalog_visibility' => $data["catalog_visibility"],
             'stock_quantity' => $data["stock_quantity"],
             'stock_status' => $data['stock_status'],
         ];
+
         $credentials = auth()->user()->getWCCredentials()["wc_credentials"];
 
         $result = Http::withBasicAuth($credentials["username"], $credentials["password"])
@@ -77,13 +79,14 @@ class ProductController extends Controller
         {
             foreach ($variations as $variation) {
                 $mapped_variation = [
-                    'sale_price' => $variation["sale_price"],
+                    'sale_price' => $variation['sale_price'],
                     'regular_price' => $variation['regular_price'],
-                    'stock_quantity' => $variation["stock_quantity"],
+                    'manage_stock' => $variation['manage_stock'],
+                    'stock_quantity' => $variation['stock_quantity'],
                     'stock_status' => $variation['stock_status']
                 ];
 
-                $url = $credentials["url"].'/wp-json/wc/v3/products/'.$product["id"]."/".$variation['id'];
+                $url = $credentials["url"].'/wp-json/wc/v3/products/'.$product["id"]."/variations/".$variation['id'];
 
                 $pool->withBasicAuth($credentials["username"], $credentials["password"])
                     ->put($url, $mapped_variation);
@@ -149,11 +152,12 @@ class ProductController extends Controller
         return [
             'id' => $base_external_product["id"],
             'name' => $base_external_product["name"],
-            'sale_price' => $base_external_product["sale_price"],
+            'sale_price' => $base_external_product["price"],
             'image_url' => $base_external_product["images"][0]["src"],
             'regular_price' => $base_external_product['regular_price'],
             'permalink' => $base_external_product["permalink"],
             'catalog_visibility' => $base_external_product["catalog_visibility"],
+            'manage_stock' => $base_external_product['manage_stock'],
             'stock_quantity' => $base_external_product["stock_quantity"],
             'stock_status' => $base_external_product['stock_status']
         ];
@@ -173,11 +177,12 @@ class ProductController extends Controller
     {
         $variation = [
             'id' => $external_variation["id"],
-            'sale_price' => $external_variation["sale_price"],
+            'sale_price' => $external_variation["price"],
             'regular_price' => $external_variation['regular_price'],
             'image_url' => $external_variation['image']['src'],
             'permalink' => $external_variation["permalink"],
             'attributes' => $external_variation["attributes"],
+            'manage_stock' => $external_variation['manage_stock'],
             'stock_quantity' => $external_variation["stock_quantity"],
             'stock_status' => $external_variation['stock_status']
         ];
