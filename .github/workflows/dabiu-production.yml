@@ -35,13 +35,13 @@ jobs:
         npm run build
 
     - name: Create dotenv file
-      run: php -r "file_exists('.env') || file_put_contents('.env', '
+      run: php -r "file_put_contents('.env', '
         APP_DEBUG=false'.PHP_EOL.'
         DB_CONNECTION=mysql'.PHP_EOL.'
         DB_HOST=127.0.0.1'.PHP_EOL.'
         DB_PORT=3306'.PHP_EOL.'
-        DB_DATABASE=u905871557_dabiu'.PHP_EOL.'
-        DB_USERNAME=${{secrets.DB_USERNAME}}'.PHP_EOL.'
+        DB_DATABASE=${{vars.DB_DATABASE}}'.PHP_EOL.'
+        DB_USERNAME=${{vars.DB_USERNAME}}'.PHP_EOL.'
         DB_PASSWORD=${{secrets.DB_PASSWORD}}'.PHP_EOL.'
         VITE_API_BASE_URL=https://localhost/api'.PHP_EOL.'
         );'"
@@ -59,23 +59,23 @@ jobs:
       run: php artisan view:cache
     
     - name: Deploy API
-      uses: AEnterprise/rsync-deploy@v1.0
+      uses: AEnterprise/rsync-deploy@v1.0.2
       env:
-        DEPLOY_KEY: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
+        DEPLOY_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: '-avzh --exclude=".*"'
-        SERVER_PORT: ${{ secrets.PROD_SSH_PORT }}
+        SERVER_PORT: ${{ vars.SSH_PORT }}
         FOLDER: "./"
-        SERVER_IP: ${{ secrets.PROD_SSH_HOST }}
-        USERNAME: ${{ secrets.PROD_SSH_USER }}
+        SERVER_IP: ${{ vars.SSH_HOST }}
+        USERNAME: ${{ vars.SSH_USER }}
         SERVER_DESTINATION: "domains/duite.com.ar/dabiu-api"
     
-    - name: Deploy API
-      uses: AEnterprise/rsync-deploy@v1.0
+    - name: Deploy public folder
+      uses: AEnterprise/rsync-deploy@v1.0.2
       env:
-        DEPLOY_KEY: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
+        DEPLOY_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: '-avzh --exclude=".*"'
-        SERVER_PORT: ${{ secrets.PROD_SSH_PORT }}
+        SERVER_PORT: ${{ vars.SSH_PORT }}
         FOLDER: "./public"
-        SERVER_IP: ${{ secrets.PROD_SSH_HOST }}
-        USERNAME: ${{ secrets.PROD_SSH_USER }}
+        SERVER_IP: ${{ vars.SSH_HOST }}
+        USERNAME: ${{ vars.SSH_USER }}
         SERVER_DESTINATION: "domains/duite.com.ar/public_html/dabiu"
