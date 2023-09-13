@@ -7,6 +7,10 @@ jobs:
   laravel-deploy-production:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: production
+
     steps:
     - uses: actions/checkout@v2
 
@@ -27,42 +31,43 @@ jobs:
         key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
     
     - name: Install Composer Dependencies
-      run: composer install -q --optimize-autoloader --no-dev --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+      run: composer install -q --optimize-autoloader --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+    - name: Create .env file
+      run: |
+        echo "APP_KEY=" >> .env
+        echo "APP_DEBUG=false" >> .env
+        echo "APP_ENV=production" >> .env
+        echo "DB_CONNECTION=mysql" >> .env
+        echo "DB_HOST=127.0.0.1" >> .env
+        echo "DB_PORT=3306" >> .env
+        echo "DB_DATABASE=${{ vars.DB_DATABASE }}" >> .env
+        echo "DB_USERNAME=${{ vars.DB_USERNAME }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "VITE_API_BASE_URL=https://dabiu-api.duite.com.ar" >> .env
+    
+    - name: Create public .env file
+      run: |
+        echo "BASE_PATH=/../../dabiu-api" >> public/.env
     
     - name: Build Node
       run: |
         npm install
         npm run build
-
-    - name: Create dotenv file
-      run: php -r "file_put_contents('.env', '
-        APP_DEBUG=false'.PHP_EOL.'
-        DB_CONNECTION=mysql'.PHP_EOL.'
-        DB_HOST=127.0.0.1'.PHP_EOL.'
-        DB_PORT=3306'.PHP_EOL.'
-        DB_DATABASE=${{vars.DB_DATABASE}}'.PHP_EOL.'
-        DB_USERNAME=${{vars.DB_USERNAME}}'.PHP_EOL.'
-        DB_PASSWORD=${{secrets.DB_PASSWORD}}'.PHP_EOL.'
-        VITE_API_BASE_URL=https://localhost/api'.PHP_EOL.'
-        );'"
     
     - name: Generate Key
       run: php artisan key:generate
 
-    - name: Config cache
-      run: php artisan config:cache
-    
-    - name: Caching routes
-      run: php artisan route:cache
-    
-    - name: Caching views
-      run: php artisan view:cache
+    - name: Cache setting
+      run: |
+        php artisan config:clear
+        php artisan cache:clear
     
     - name: Deploy API
       uses: AEnterprise/rsync-deploy@v1.0.2
       env:
         DEPLOY_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: '-avzh --exclude=".*"'
+        ARGS: "-e -c -r --delete"
         SERVER_PORT: ${{ vars.SSH_PORT }}
         FOLDER: "./"
         SERVER_IP: ${{ vars.SSH_HOST }}
@@ -73,9 +78,9 @@ jobs:
       uses: AEnterprise/rsync-deploy@v1.0.2
       env:
         DEPLOY_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: '-avzh --exclude=".*"'
+        ARGS: "-e -c -r --delete"
         SERVER_PORT: ${{ vars.SSH_PORT }}
-        FOLDER: "./public"
+        FOLDER: "./public/"
         SERVER_IP: ${{ vars.SSH_HOST }}
         USERNAME: ${{ vars.SSH_USER }}
         SERVER_DESTINATION: "domains/duite.com.ar/public_html/dabiu"
