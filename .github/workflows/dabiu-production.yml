@@ -44,11 +44,11 @@ jobs:
         echo "DB_DATABASE=${{ vars.DB_DATABASE }}" >> .env
         echo "DB_USERNAME=${{ vars.DB_USERNAME }}" >> .env
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-        echo "VITE_API_BASE_URL=https://dabiu-api.duite.com.ar" >> .env
+        echo "VITE_API_BASE_URL=https://dabiu.duite.com.ar/api" >> .env
     
     - name: Create public .env file
       run: |
-        echo "BASE_PATH=/../../dabiu-api" >> public/.env
+        echo "API_BASE_PATH=/../../dabiu-api" >> public/.env
     
     - name: Build Node
       run: |

@@ -5,7 +5,32 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-$BASE_PATH = env(API_BASE_PATH) || '/..';
+$envFilePath = __DIR__ . '/.env';
+
+try {
+    $envContents = file_get_contents($envFilePath);
+    
+    $envLines = explode("\n", $envContents);
+    
+    foreach ($envLines as $line) {
+        if (empty($line) || strpos($line, '#') === 0) {
+            continue;
+        }
+    
+        list($key, $value) = explode('=', $line, 2);
+    
+        $key = trim($key);
+        $value = trim($value, " \t\n\r\0\x0B\"'");
+    
+        putenv("$key=$value");
+    }
+    
+    $_ENV = $_SERVER = array_merge($_ENV, $_SERVER);
+} catch (Exception $e) {
+    
+}
+
+$BASE_PATH = getenv('API_BASE_PATH') | '/..';
 
 /*
 |--------------------------------------------------------------------------
