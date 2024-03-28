@@ -150,7 +150,7 @@ class ProductController extends Controller
             'id' => $base_external_product["id"],
             'name' => $base_external_product["name"],
             'sale_price' => $base_external_product["price"],
-            'image_url' => $base_external_product["images"][0]["src"],
+            'image_url' => isset($base_external_product["images"][0]["src"]) ? $base_external_product["images"][0]["src"] : null,
             'regular_price' => $base_external_product['regular_price'],
             'permalink' => $base_external_product["permalink"],
             'catalog_visibility' => $base_external_product["catalog_visibility"],
