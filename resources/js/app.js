@@ -5,7 +5,7 @@ import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import 'vuetify/styles';
-import colors from 'vuetify/lib/util/colors';
+import colors from 'vuetify/lib/util/colors.mjs';
 import '@mdi/font/css/materialdesignicons.css';
 import MainComponent from './MainComponent.vue';
 import LoginForm from './views/LoginForm.vue';
@@ -17,7 +17,9 @@ import Settings from './views/sections/Settings.vue';
 const vuetify = createVuetify({
   icons: {
     defaultSet: 'mdi',
-    aliases,
+    aliases: {
+      ...aliases,
+    },
     sets: {
       mdi,
     },

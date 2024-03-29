@@ -1,7 +1,7 @@
 <template>
   <CatalogRow>
-    <template v-slot:product-image class="centered">
-      <ProductThumbnail :image_src="product.image_url"/>
+    <template v-slot:product-image>
+      <ProductThumbnail :image_src="product.image_url" />
     </template>
     <template v-slot:product-name>
       <span class="product-name" @click="$emit('clickOnEdit', product.id)">{{ product.name }}</span>
@@ -20,7 +20,12 @@
     </template>
     <template v-slot:product-edit>
       <span>
-        <v-btn icon="mdi-square-edit-outline" variant="tonal" @click="$emit('clickOnEdit', product.id)"></v-btn>
+        <v-btn
+          variant="tonal"
+          class="ma-2"
+          icon="mdi-square-edit-outline"
+          @click="$emit('clickOnEdit', product.id)">
+        </v-btn>
       </span>
     </template>
   </CatalogRow>
@@ -32,28 +37,30 @@ import CatalogRow from './CatalogRow.vue';
 import ProductThumbnail from '../../../../components/ProductThumbnail.vue';
 import { getCurrency } from '../../../../helpers/getCurrency';
 
-export default{
-    props: ['product'],
-    methods: {
-        getStockMessage: function (status) {
-            if (status === 'instock') {
-                return "Sí";
-            }
-            return "No";
-        },
-        getCurrency
+export default {
+  props: ['product'],
+  methods: {
+    getStockMessage: (status) => {
+      if (status === 'instock') {
+        return 'Sí';
+      }
+      return 'No';
     },
-    components: { CatalogRow, ProductThumbnail },
-    emits: ['clickOnEdit']
-}
+    getCurrency,
+  },
+  components: { CatalogRow, ProductThumbnail },
+  emits: ['clickOnEdit'],
+};
+
 </script>
 
 <style>
-  .thumbnail{
-    max-width: 60px;
-  }
-  .product-name:hover{
-    font-weight: bold;
-    cursor: pointer;
-  }
+.thumbnail {
+  max-width: 60px;
+}
+
+.product-name:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
 </style>
