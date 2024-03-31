@@ -23,7 +23,7 @@
         <v-btn
           variant="tonal"
           class="ma-2"
-          icon="mdi-square-edit-outline"
+          icon="$edit"
           @click="$emit('clickOnEdit', product.id)">
         </v-btn>
       </span>

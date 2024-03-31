@@ -1,6 +1,6 @@
 import * as VueRouter from 'vue-router';
 import { createApp } from 'vue';
-import { aliases, mdi } from 'vuetify/iconsets/mdi';
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';

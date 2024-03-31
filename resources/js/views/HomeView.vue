@@ -2,7 +2,7 @@
   <v-container fluid class='pa-2 pa-sm-5 pa-lg-10'>
     <v-app-bar class='bg-primary-lighten-2'>
       <v-app-bar-nav-icon @click.stop='drawer = !drawer'>
-        <v-icon icon='mdi-menu' />
+        <v-icon icon='$menu' />
       </v-app-bar-nav-icon>
       <v-app-bar-title>
         <Logo class='in-bar-logo pa-2 d-block'></Logo>
